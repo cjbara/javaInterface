@@ -1,4 +1,4 @@
-select state
+select stcode
 from states
-where stcode = 'AK'
+where state = 'Alaska'
 ;
