@@ -117,9 +117,9 @@ class query
 						q = "select case when p.team = 'O' then 'Offense' when p.team = 'D' then 'Defense' when p.team = 'S' then 'Special Teams' end as team, count(*) from roster r, positions p where r.position = p.position and r.stcode='"+state+"' group by team;";
 						
 						rs = stmt.executeQuery (q);
-                        System.out.printf("%-10s %s\n", "Team", "Players from "+state);
+                        System.out.printf("%-15s %s\n", "Team", "Players from "+state);
 						while(rs.next()){
-                            System.out.printf("%-10s %-2d\n", rs.getString(1), rs.getInt(2));
+                            System.out.printf("%-15s %-2d\n", rs.getString(1), rs.getInt(2));
                         }
 						break;
 					case 7:
@@ -167,20 +167,16 @@ class player_region
     Connection conn = DriverManager.getConnection (connstr);
            
     Statement stmt = conn.createStatement ();
-    String query = "select r.region, players  from regions r join (select s.regcode as REGION, count(*) as PLAYERS from streg s join roster x on s.stcode = x.stcode group by s.regcode order by 2 desc, 1) s where r.regcode=s.region";
-
-    ResultSet rs = stmt.executeQuery (query);
-
-    // Iterate through the result and display the results
-    System.out.println("The number of players from each region are:");
-    while (rs.next ()) {
-      System.out.print (rs.getString (1));
-      System.out.print (":  ");
-
-      System.out.println (rs.getString (2));
-    }
+	String q;
+    ResultSet rs;
+	
+						q = "select city, stcode, count(*) as z from uszips group by city, stcode having z >= (select min(a) from (select count(*) as a from uszips group by city, stcode order by 1 desc limit 10)) order by 3 desc;";
+						rs = stmt.executeQuery (q);
+                        System.out.printf("%-20s %s\n", "City", "Total Zip Codes");
+						while(rs.next()){
+                            System.out.printf("%-20s %-2d\n", rs.getString(1)+", "+rs.getString(2), rs.getInt(3));
+                        }
 
     rs.close(); stmt.close(); conn.close();
   }
 }
-
