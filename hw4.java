@@ -17,6 +17,8 @@ class query
 	Statement stmt = conn.createStatement ();
 	ResultSet rs;
   
+	String state;
+	
     while(true) { 
         System.out.println("\nPlease choose from the selection below:");
 	    System.out.println("1: States queries");
@@ -50,7 +52,7 @@ class query
 						break;
 					case 1:  
         				System.out.println("Enter a state code to see which players are from that state");	
-						String state = reader.next();
+						state = reader.next();
 						q = "select jno, last, first, city, stcode from roster where stcode = '"+state+"';";
 					
 						//execute query
@@ -64,10 +66,25 @@ class query
 						}
                      	break;
             		case 2:  
-						q = "Query 2";
+        				System.out.println("Enter a state code to see how many players are from that state");	
+						state = reader.next();
+						q = "select count(*) from (select jno, last, first, city, stcode from roster where stcode = '"+state+"');";
+					
+						//execute query
+						rs = stmt.executeQuery (q);
+						if( !rs.next() ){ 
+        					System.out.println ("There are no players from "+state+". ");
+						} else {
+        				System.out.println ("There are "+rs.getString(1)+" players from "+state);
+						}
                      	break;
             		case 3:  
-						q = "Query 3";
+						q = "select r.region, players  from regions r, (select s.regcode as region, count(*) as players from streg s join roster x on s.stcode = x.stcode group by s.regcode order by 2 desc, 1) s where r.regcode=s.region order by 2 desc, 1";
+						rs = stmt.executeQuery (q);
+                        System.out.printf("%-15s %s\n", "Region", "Number of players");
+						while(rs.next()){
+                            System.out.printf("%-15s %2d\n", rs.getString(1), rs.getInt(2));
+                        }
                      	break;
             		case 4:  
 						q = "select position, avg(case when year = 'FR' then a.w end) as 'FR', avg(case when year = 'SO' then a.w end) as 'SO', avg(case when year = 'JR' then a.w end) as 'JR', avg(case when year = 'SR' then a.w end) as 'SR', avg(case when year = 'GS' then a.w end) as 'GS' from (select position, year, avg(weight) as w from roster group by position, year order by 2 desc, 1 ) a group by position order by 1;";
@@ -87,24 +104,7 @@ class query
 		} else {
 			System.out.println("Please enter a valid number");
 		}
-/*
-        System.out.println(inString);
-        System.out.println();
-		
-        Statement stmt = conn.createStatement ();
-        String query = "select state from states";
-
-        ResultSet rs = stmt.executeQuery (query);
-
-        // Iterate through the result and display the results
-        System.out.println("The states are:");
-        while (rs.next ()) {
-            System.out.println (rs.getString (1));
-        }
-*/
     }
-
-  
   }
 }
 
