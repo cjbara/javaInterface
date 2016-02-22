@@ -45,7 +45,8 @@ class query
         		System.out.println("4: Average weight by position for each class");	
         		System.out.println("5: Average height and weight by region");	
         		System.out.println("6: Number of players from a state on Offense/Defense/SpecialTeams");	
-        		System.out.println("7: Average weight by position");	
+        		System.out.println("7: Average weight by position");
+        		System.out.println("8: List all players of specific position");
         		System.out.println("0: Go Back");
 	
 				n = reader.nextInt();
@@ -128,6 +129,20 @@ class query
 						System.out.printf("%-15s %12s\n", "Position", "Avg Weight");
 						while(rs.next()){
 							System.out.printf("%-15s %12.1f\n", rs.getString(1), rs.getFloat(2));
+						}
+						break;
+					case 8:
+        				System.out.println("Enter a position (ex: Running Back)");	
+						state = reader.next();
+						q = "select jno, last, first from roster where position = '"+state+"';";
+						//execute query
+						rs = stmt.executeQuery (q);
+						if( !rs.next() ){ 
+        					System.out.println ("There are no players that play "+state+". ");
+						} else {
+        				System.out.println ("Players who play "+state+": ");
+						while(rs.next())
+							System.out.println ("#"+rs.getString (1)+" "+rs.getString (3)+" "+rs.getString (2));
 						}
 						break;
 					default:
