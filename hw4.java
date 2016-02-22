@@ -40,6 +40,7 @@ class query
                         System.out.println("2: Enter one zip code of a city and receive all other zips for that city");
                         System.out.println("3: Find all the city names that begin with three letters of your choice");
                         System.out.println("4: List the 10 cities with the most zip codes");
+			System.out.println("5: List the 10 cities most frequently found in the US, with counts per region");
                         System.out.println("0: Go Back");
                                 n = reader.nextInt();
 
