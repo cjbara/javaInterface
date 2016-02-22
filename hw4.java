@@ -89,7 +89,8 @@ class query
 
                                         System.out.println("Enter the beginning of the city names you would like to see.");
                                                 String citystart;
-                                                citystart = reader.next();
+                                                citystart = reader.nextLine();
+                                                citystart = reader.nextLine();
 
                                                 q = "select distinct city, stcode from uszips where city like '"+citystart+"%'";
                                                 rs = stmt.executeQuery (q);
