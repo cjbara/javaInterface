@@ -215,7 +215,8 @@ class query
 						break;
 					case 8:
         				System.out.println("Enter a position (ex: Running Back)");	
-						state = reader.next();
+						state = reader.nextLine();
+						state = reader.nextLine();
 						q = "select jno, last, first from roster where position = '"+state+"';";
 						//execute query
 						rs = stmt.executeQuery (q);
