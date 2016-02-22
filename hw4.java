@@ -15,6 +15,7 @@ class query
     String connstr = "jdbc:sqlite:states.db";
     Connection conn = DriverManager.getConnection (connstr);
 	Statement stmt = conn.createStatement ();
+	ResultSet rs;
   
     while(true) { 
         System.out.println("\nPlease choose from the selection below:");
@@ -38,7 +39,7 @@ class query
         		System.out.println("1: List of players from a particular state");
         		System.out.println("2: Number of players from a particular state");
         		System.out.println("3: Number of players in each region");	
-        		System.out.println("4: Weight by position for each class");	
+        		System.out.println("4: Average weight by position for each class");	
         		System.out.println("0: Go Back");
 	
 				n = reader.nextInt();
@@ -53,7 +54,7 @@ class query
 						q = "select jno, last, first, city, stcode from roster where stcode = '"+state+"';";
 					
 						//execute query
-						ResultSet rs = stmt.executeQuery (q);
+						rs = stmt.executeQuery (q);
 						if( !rs.next() ){ 
         					System.out.println ("There are no players from "+state+". ");
 						} else {
@@ -67,6 +68,15 @@ class query
                      	break;
             		case 3:  
 						q = "Query 3";
+                     	break;
+            		case 4:  
+						q = "select position, avg(case when year = 'FR' then a.w end) as 'FR', avg(case when year = 'SO' then a.w end) as 'SO', avg(case when year = 'JR' then a.w end) as 'JR', avg(case when year = 'SR' then a.w end) as 'SR', avg(case when year = 'GS' then a.w end) as 'GS' from (select position, year, avg(weight) as w from roster group by position, year order by 2 desc, 1 ) a group by position order by 1;";
+						//execute query
+						rs = stmt.executeQuery (q);
+						System.out.printf("%-20s %7s %7s %7s %7s %7s\n", "Position", "FR", "SO", "JR", "SR", "GS");
+						while(rs.next()){
+							System.out.printf("%-20s %7.1f %7.1f %7.1f %7.1f %7.1f\n", rs.getString(1), rs.getFloat(2), rs.getFloat(3), rs.getFloat(4), rs.getFloat(5), rs.getFloat(6));
+						}
                      	break;
 					default:
 						System.out.println("Please enter a valid number");
@@ -95,60 +105,6 @@ class query
     }
 
   
-  }
-}
-
-
-
-
-
-
-
-
-class region
-{
-  public static void main (String args [])
-       throws SQLException
-  {
-
-    String connstr = "jdbc:sqlite:states.db";
-    Connection conn = DriverManager.getConnection (connstr);
-				   
-    Statement stmt = conn.createStatement ();
-    String query = "select region from regions";
-
-    ResultSet rs = stmt.executeQuery (query);
-
-    // Iterate through the result and display the results
-    System.out.println("The regions are:");
-    while (rs.next ()) {
-      System.out.println (rs.getString (1));
-    }
-
-    rs.close(); stmt.close(); conn.close();
-  }
-}
-
-class state
-{
-  public static void main (String args [])
-       throws SQLException
-  {
-    String connstr = "jdbc:sqlite:states.db";
-    Connection conn = DriverManager.getConnection (connstr);
-           
-    Statement stmt = conn.createStatement ();
-    String query = "select state from states";
-
-    ResultSet rs = stmt.executeQuery (query);
-
-    // Iterate through the result and display the results
-    System.out.println("The states are:");
-    while (rs.next ()) {
-      System.out.println (rs.getString (1));
-    }
-
-    rs.close(); stmt.close(); conn.close();
   }
 }
 
