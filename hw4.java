@@ -12,7 +12,15 @@ class query
     float b;
     Scanner reader = new Scanner(System.in);  // Reading from System.in
 
-    System.out.println("\nPlease choose from the selection below");
+    String connstr = "jdbc:sqlite:states.db";
+    Connection conn = DriverManager.getConnection (connstr);
+   
+    while(true) { 
+        System.out.println("\nPlease choose from the selection below:");
+	    System.out.println("1: States queries");
+	    System.out.println("2: ND Player queries");
+	    System.out.println("0: Exit");
+/*
     System.out.println("Query 1: ");
     System.out.println("Query 2: ");
     System.out.println("Query 3: ");
@@ -28,18 +36,53 @@ class query
     //System.out.println("Query 13: ");
     //System.out.println("Query 14: ");
     System.out.println("Entering 0 will quit the program");
-
-
-    while(true) {
-
-
-    System.out.print("\nEnter the number of the desired query: ");
-    //System.out.println("Enter a number: ");
-
-    n = reader.nextInt(); // Scans the next token of the input as an int.
+*/
+        n = reader.nextInt(); // Scans the next token of the input as an int.
  
-        String inString;
-        switch (n) {
+        String q;
+		if(n == 0) {
+			System.out.println("System exit");
+			System.exit(0);
+		} else if (n == 1) {
+			System.out.println("States Queries");
+		} else if (n == 2) {
+			System.out.println("ND Roster Queries");
+			Boolean flag = true;
+			while(flag) {
+				System.out.println("\nND Roster Queries: Please choose from the selection below:");
+        		System.out.println("1: Number of players from each state");
+        		System.out.println("2: Weight by position for each class");	
+        		System.out.println("3: ");	
+        		System.out.println("0: Go Back");
+	
+				n = reader.nextInt();
+				
+				switch(n) {
+					case 0: 
+						flag = false;
+						break;
+					case 1:  
+        				System.out.println("Enter a state code to see which players are from that state");	
+						String state = reader.next();
+						q = "select jno, last, first, city, stcode from roster where stcode = '"+state+"';";
+        				System.out.println(q);
+                     	break;
+            		case 2:  
+						q = "Query 2";
+                     	break;
+            		case 3:  
+						q = "Query 3";
+                     	break;
+					default:
+						System.out.println("Please enter a valid number");
+						break;
+				}
+
+			}
+		} else {
+			System.out.println("Please enter a valid number");
+		}
+       /* switch (n) {
             case 0:  inString = "Option 0";  //quits the program
                      System.out.println("System exit");
                      System.exit(0);
@@ -73,6 +116,18 @@ class query
         }
         System.out.println(inString);
         System.out.println();
+		
+        Statement stmt = conn.createStatement ();
+        String query = "select state from states";
+
+        ResultSet rs = stmt.executeQuery (query);
+
+        // Iterate through the result and display the results
+        System.out.println("The states are:");
+        while (rs.next ()) {
+            System.out.println (rs.getString (1));
+        }
+*/		
 
     }
 
