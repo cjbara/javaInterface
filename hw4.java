@@ -14,29 +14,14 @@ class query
 
     String connstr = "jdbc:sqlite:states.db";
     Connection conn = DriverManager.getConnection (connstr);
-   
+	Statement stmt = conn.createStatement ();
+  
     while(true) { 
         System.out.println("\nPlease choose from the selection below:");
 	    System.out.println("1: States queries");
 	    System.out.println("2: ND Player queries");
 	    System.out.println("0: Exit");
-/*
-    System.out.println("Query 1: ");
-    System.out.println("Query 2: ");
-    System.out.println("Query 3: ");
-    System.out.println("Query 4: ");
-    System.out.println("Query 5: ");
-    System.out.println("Query 6: ");
-    System.out.println("Query 7: ");
-    System.out.println("Query 8: ");
-    System.out.println("Query 9: ");
-    System.out.println("Query 10: ");
-    System.out.println("Query 11: ");
-    System.out.println("Query 12: ");
-    //System.out.println("Query 13: ");
-    //System.out.println("Query 14: ");
-    System.out.println("Entering 0 will quit the program");
-*/
+
         n = reader.nextInt(); // Scans the next token of the input as an int.
  
         String q;
@@ -50,9 +35,10 @@ class query
 			Boolean flag = true;
 			while(flag) {
 				System.out.println("\nND Roster Queries: Please choose from the selection below:");
-        		System.out.println("1: Number of players from each state");
-        		System.out.println("2: Weight by position for each class");	
-        		System.out.println("3: ");	
+        		System.out.println("1: List of players from a particular state");
+        		System.out.println("2: Number of players from a particular state");
+        		System.out.println("3: Number of players in each region");	
+        		System.out.println("4: Weight by position for each class");	
         		System.out.println("0: Go Back");
 	
 				n = reader.nextInt();
@@ -65,7 +51,16 @@ class query
         				System.out.println("Enter a state code to see which players are from that state");	
 						String state = reader.next();
 						q = "select jno, last, first, city, stcode from roster where stcode = '"+state+"';";
-        				System.out.println(q);
+					
+						//execute query
+						ResultSet rs = stmt.executeQuery (q);
+						if( !rs.next() ){ 
+        					System.out.println ("There are no players from "+state+". ");
+						} else {
+        				System.out.println ("Players from "+state+": ");
+						while(rs.next())
+							System.out.println ("#"+rs.getString (1)+" "+rs.getString (3)+" "+rs.getString (2)+" is from "+rs.getString (4)+", "+rs.getString (5));
+						}
                      	break;
             		case 2:  
 						q = "Query 2";
@@ -82,38 +77,7 @@ class query
 		} else {
 			System.out.println("Please enter a valid number");
 		}
-       /* switch (n) {
-            case 0:  inString = "Option 0";  //quits the program
-                     System.out.println("System exit");
-                     System.exit(0);
-                     break;
-            case 1:  inString = "Query 1";
-                     break;
-            case 2:  inString = "Query 2";
-                     break;
-            case 3:  inString = "Query 3";
-                     break;
-            case 4:  inString = "Query 4";
-                     break;
-            case 5:  inString = "Query 5";
-                     break;
-            case 6:  inString = "Query 6";
-                     break;
-            case 7:  inString = "Query 7";
-                     break;
-            case 8:  inString = "Query 8";
-                     break;
-            case 9:  inString = "Query 9";
-                     break;
-            case 10: inString = "Query 10";
-                     break;
-            case 11: inString = "Query 11";
-                     break;
-            case 12: inString = "Query 12";
-                     break;
-            default: inString = "Invalid selection";
-                     break;
-        }
+/*
         System.out.println(inString);
         System.out.println();
 		
@@ -127,8 +91,7 @@ class query
         while (rs.next ()) {
             System.out.println (rs.getString (1));
         }
-*/		
-
+*/
     }
 
   
