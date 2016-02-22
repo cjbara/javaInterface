@@ -42,6 +42,7 @@ class query
         		System.out.println("2: Number of players from a particular state");
         		System.out.println("3: Number of players in each region");	
         		System.out.println("4: Average weight by position for each class");	
+        		System.out.println("5: Average height and weight by region");	
         		System.out.println("0: Go Back");
 	
 				n = reader.nextInt();
@@ -95,6 +96,8 @@ class query
 							System.out.printf("%-20s %7.1f %7.1f %7.1f %7.1f %7.1f\n", rs.getString(1), rs.getFloat(2), rs.getFloat(3), rs.getFloat(4), rs.getFloat(5), rs.getFloat(6));
 						}
                      	break;
+					case 5:
+						
 					default:
 						System.out.println("Please enter a valid number");
 						break;
