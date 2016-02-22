@@ -45,6 +45,7 @@ class query
         		System.out.println("4: Average weight by position for each class");	
         		System.out.println("5: Average height and weight by region");	
         		System.out.println("6: Number of players from a state on Offense/Defense/SpecialTeams");	
+        		System.out.println("7: Average weight by position");	
         		System.out.println("0: Go Back");
 	
 				n = reader.nextInt();
@@ -119,6 +120,15 @@ class query
 						while(rs.next()){
                             System.out.printf("%-10s %-2d\n", rs.getString(1), rs.getInt(2));
                         }
+						break;
+					case 7:
+						q = "select position, avg(weight) as avgWeight from roster group by position order by 2 desc, 1;";
+						//execute query
+						rs = stmt.executeQuery (q);
+						System.out.printf("%-15s %12s\n", "Position", "Avg Weight");
+						while(rs.next()){
+							System.out.printf("%-15s %12.1f\n", rs.getString(1), rs.getFloat(2));
+						}
 						break;
 					default:
 						System.out.println("Please enter a valid number");
