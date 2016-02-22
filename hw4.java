@@ -21,8 +21,8 @@ class query
 	
     while(true) { 
         System.out.println("\nPlease choose from the selection below:");
-	    System.out.println("1: States queries");
-	    System.out.println("2: ND Player queries");
+	    System.out.println("1: States queries/reports");
+	    System.out.println("2: ND Player queries/reports");
 	    System.out.println("0: Exit");
 
         n = reader.nextInt(); // Scans the next token of the input as an int.
@@ -33,7 +33,89 @@ class query
 			System.exit(0);
 		} else if (n == 1) {
 			System.out.println("States Queries");
-				//testing push
+                        Boolean flag = true;
+                        while(flag) {
+                                System.out.println("\nStates Queries: Please choose from the selection below:");
+                        System.out.println("1: List all of the US states");
+                        System.out.println("2: Enter one zip code of a city and receive all other zips for that city");
+                        System.out.println("3: Find all the city names that begin with three letters of your choice");
+                        System.out.println("4: List the 10 cities with the most zip codes");
+                        System.out.println("0: Go Back");
+                                n = reader.nextInt();
+
+                                switch(n) {
+                                        case 0:
+                                               	flag = false;
+                                                break;
+                                        case 1:
+//                                        System.out.println("Enter a state cod");
+  //                                              state = reader.next();
+                                                q = "select state from states;";
+
+                                                //execute query
+                                                rs = stmt.executeQuery (q);
+//                                                if( !rs.next() ){
+  //                                              System.out.println ("There are no players from "+state+". ");
+    //                                            } else {
+                                        System.out.println ("The 50 states are: ");
+                                                while(rs.next()){
+                                                        System.out.println (rs.getString (1));                                                }
+                        break;
+                        case 2:
+                                        System.out.println("Enter a zip code to see all other zip codes from the same city.");
+                                                String zip;
+						zip = reader.next();
+                                                q = "select a.city, a.stcode, a.zip from uszips a, (select * from uszips z where z.zip = '"+zip+"' ) b where a.stcode = b.stcode and a.city=b.city;";
+
+
+                                                //execute query
+                                                rs = stmt.executeQuery (q);
+                                                if( !rs.next() ){
+                                                System.out.println ("There are no cities with zip code "+zip+". ");
+                                                } else {
+                                        System.out.println ("The other zip codes for city "+rs.getString (1)+" are:\n");
+                                                while(rs.next()){
+                                                        System.out.println (rs.getString (1)+", "+rs.getString (2)+" "+rs.getString (3));
+                                                }
+
+					}
+                                                
+                        break;
+                        case 3:
+
+
+//select distinct city, stcode from uszips where city like 'Las%'; 
+
+                                        System.out.println("Enter the beginning of the city names you would like to see.");
+                                                String citystart;
+                                                citystart = reader.next();
+
+                                                q = "select distinct city, stcode from uszips where city like '"+citystart+"%'";
+                                                rs = stmt.executeQuery (q);
+                        System.out.printf("These are the cities that begin with "+citystart+":\n");
+                                                while(rs.next()){
+                            System.out.printf(rs.getString (1)+", "+rs.getString (2)+"\n");
+                        }
+                        break;
+                        case 4:
+							q = "select city, stcode, count(*) as z from uszips group by city, stcode having z >= (select min(a) from (select count(*) as a from uszips group by city, stcode order by 1 desc limit 10)) order by 3 desc;";
+							rs = stmt.executeQuery (q);
+                        	System.out.printf("%-20s %s\n", "City", "Total Zip Codes");
+							while(rs.next()){
+                            	System.out.printf("%-20s %-2d\n", rs.getString(1)+", "+rs.getString(2), rs.getInt(3));
+                        	}
+	                        break;
+                                        default:
+                                                System.out.println("Please enter a valid number");
+                                                break;
+                                }
+
+                        }
+                		
+
+
+
+
 		} else if (n == 2) {
 			System.out.println("ND Roster Queries");
 			Boolean flag = true;
@@ -155,28 +237,5 @@ class query
 			System.out.println("Please enter a valid number");
 		}
     }
-  }
-}
-
-class player_region
-{
-  public static void main (String args [])
-       throws SQLException
-  {
-    String connstr = "jdbc:sqlite:states.db";
-    Connection conn = DriverManager.getConnection (connstr);
-           
-    Statement stmt = conn.createStatement ();
-	String q;
-    ResultSet rs;
-	
-						q = "select city, stcode, count(*) as z from uszips group by city, stcode having z >= (select min(a) from (select count(*) as a from uszips group by city, stcode order by 1 desc limit 10)) order by 3 desc;";
-						rs = stmt.executeQuery (q);
-                        System.out.printf("%-20s %s\n", "City", "Total Zip Codes");
-						while(rs.next()){
-                            System.out.printf("%-20s %-2d\n", rs.getString(1)+", "+rs.getString(2), rs.getInt(3));
-                        }
-
-    rs.close(); stmt.close(); conn.close();
   }
 }
