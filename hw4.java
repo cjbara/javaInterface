@@ -44,6 +44,7 @@ class query
         		System.out.println("3: Number of players in each region");	
         		System.out.println("4: Average weight by position for each class");	
         		System.out.println("5: Average height and weight by region");	
+        		System.out.println("6: Number of players from a state on Offense/Defense/SpecialTeams");	
         		System.out.println("0: Go Back");
 	
 				n = reader.nextInt();
@@ -98,7 +99,27 @@ class query
 						}
                      	break;
 					case 5:
+						q = "select region, avg(height_ft*12 + height_in) as avgheight, avg(weight) as avgweight from roster r, streg s, regions reg where r.stcode = s.stcode and reg.regcode = s.regcode group by s.regcode order by 2 desc, 3 desc, 1;";
+						//execute query
+						rs = stmt.executeQuery (q);
+						System.out.printf("%-20s %12s %12s\n", "Region", "Avg Height", "Avg Weight");
+						while(rs.next()){
+							int feet = rs.getInt(2)/12;
+							float in = rs.getFloat(2) - feet*12;
+							System.out.printf("%-20s %6d'%4.1f\" %12.1f\n", rs.getString(1), feet, in, rs.getFloat(3));
+						}
+						break;
+					case 6:
+        				System.out.println("Enter a state code");	
+						state = reader.next();
+						q = "select case when p.team = 'O' then 'Offense' when p.team = 'D' then 'Defense' when p.team = 'S' then 'Special Teams' end as team, count(*) from roster r, positions p where r.position = p.position and r.stcode='"+state+"' group by team;";
 						
+						rs = stmt.executeQuery (q);
+                        System.out.printf("%-10s %s\n", "Team", "Players from "+state);
+						while(rs.next()){
+                            System.out.printf("%-10s %-2d\n", rs.getString(1), rs.getInt(2));
+                        }
+						break;
 					default:
 						System.out.println("Please enter a valid number");
 						break;
