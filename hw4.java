@@ -33,7 +33,86 @@ class query
 			System.exit(0);
 		} else if (n == 1) {
 			System.out.println("States Queries");
-				//testing push
+                        Boolean flag = true;
+                        while(flag) {
+                                System.out.println("\nStates Queries: Please choose from the selection below:");
+                        System.out.println("1: List all of the US states");
+                        System.out.println("2: Enter one zip code of a city and receive all other zips for that city");
+                        System.out.println("3: Find all the city names that begin with a letter of your choice");
+                        System.out.println("4: test");
+                        System.out.println("0: Go Back");
+                                n = reader.nextInt();
+
+                                switch(n) {
+                                        case 0:
+                                               	flag = false;
+                                                break;
+                                        case 1:
+//                                        System.out.println("Enter a state code to see which players are from that state");
+  //                                              state = reader.next();
+                                                q = "select states from uszips";
+
+                                                //execute query
+                                                rs = stmt.executeQuery (q);
+//                                                if( !rs.next() ){
+  //                                              System.out.println ("There are no players from "+state+". ");
+    //                                            } else {
+                                        System.out.println ("The 50 states are: ");
+                                                while(rs.next()){
+                                                        System.out.println (rs.getString (1));                                                }
+                        break;
+                        case 2:
+                                        System.out.println("Enter a zip code to see all other zip codes from the same city");
+                                                String zip;
+						zip = reader.next();
+                                                q = "select a.city, a.stcode, a.zip from uszips a, (select * from uszips z where z.zip = '"+zip+"' ) b where a.stcode = b.stcode and a.city=b.city);";
+
+
+                                                //execute query
+                                                rs = stmt.executeQuery (q);
+                                                if( !rs.next() ){
+                                                System.out.println ("There are no cities with zip code "+zip+". ");
+                                                } else {
+                                        System.out.println ("The other zip codes for city "+rs.getString (1)+" are:\n");
+                                                while(rs.next())
+                                                        System.out.println (rs.getString (1)+" "+rs.getString (2)+" "+rs.getString (3));
+                                                }
+
+
+                                                }
+                        break;
+                        case 3:
+/*                                                q = "select r.region, players  from regions r, (select s.regcode as region, count(*) as players from streg s join roster x on s.stco$
+                                                rs = stmt.executeQuery (q);
+                        System.out.printf("%-15s %s\n", "Region", "Number of players");
+                                                while(rs.next()){
+                            System.out.printf("%-15s %2d\n", rs.getString(1), rs.getInt(2));
+                        }
+                        break;
+*/                        case 4:
+
+  /*                                              q = "select position, avg(case when year = 'FR' then a.w end) as 'FR', avg(case when year = 'SO' then a.w end) as 'SO', avg(case whe$
+                                                //execute query
+                                                rs = stmt.executeQuery (q);
+                                                System.out.printf("%-20s %7s %7s %7s %7s %7s\n", "Position", "FR", "SO", "JR", "SR", "GS");
+                                                while(rs.next()){
+                                                        System.out.printf("%-20s %7.1f %7.1f %7.1f %7.1f %7.1f\n", rs.getString(1), rs.getFloat(2), rs.getFloat(3), rs.getFloat(4), $
+                                                }
+                        break;
+                                        default:
+                                                System.out.println("Please enter a valid number");
+                                                break;
+                                }
+
+                        }
+                } else {
+                        System.out.println("Please enter a valid number");
+                }
+			
+*/
+
+
+
 		} else if (n == 2) {
 			System.out.println("ND Roster Queries");
 			Boolean flag = true;
